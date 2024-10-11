@@ -9,19 +9,19 @@ class BerriesService:
     __base_url = "https://pokeapi.co/api/v2/berry"
 
     @staticmethod
-    def __get_growth_time_median(growth_times: List[int]):
-        return statistics.median(growth_times)
+    def __get_growth_time_median(growth_times: List[int]) -> float:
+        return round(float(statistics.median(growth_times)), 2)
 
     @staticmethod
-    def __get_growth_time_variance(growth_times: List[int]):
-        return statistics.variance(growth_times)
+    def __get_growth_time_variance(growth_times: List[int]) -> float:
+        return round(float(statistics.variance(growth_times)), 2)
 
     @staticmethod
-    def __get_growth_time_mean(growth_times: List[int]):
-        return statistics.mean(growth_times)
+    def __get_growth_time_mean(growth_times: List[int]) -> float:
+        return round(float(statistics.mean(growth_times)), 2)
     
     @staticmethod
-    def __get_growth_time_frequency(growth_times: List[int]):
+    def __get_growth_time_frequency(growth_times: List[int]) -> Counter:
         return Counter(growth_times)
 
     def get_statistics(self) -> Dict[str, Any]:
