@@ -17,6 +17,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+from berries import views
+
 urlpatterns = [
+    path("allBerryStats/", views.all_berry_stats, name="allBerryStats"),
     path("admin/", admin.site.urls),
 ]
