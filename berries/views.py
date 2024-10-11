@@ -8,5 +8,8 @@ from django.http import JsonResponse
 @csrf_exempt
 @require_http_methods(["GET"])
 def all_berry_stats(request: HttpRequest) -> JsonResponse:
-    berry_stats = BerriesService().get_statistics()
-    return JsonResponse(berry_stats, status=200)
+    try:
+        berry_stats = BerriesService().get_statistics()
+        return JsonResponse(berry_stats, status=200)
+    except Exception:
+        return JsonResponse({'error': 'There was an error processing the berry statistics.'}, status=500)
