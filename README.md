@@ -2,9 +2,9 @@
 
 Simple API developed in Django that retrieves data related to pokeberries and performs statistical calculations on them, using the [Poke API](https://pokeapi.co/docs/v2#berries).
 
-The API consists of one simple endpoint **/all_berry_stats**.
+The API consists of one simple endpoint **/allBerryStats**.
 
-## all_berry_stats
+## allBerryStats
 This endpoint fetches data from the Poke API, specifically the [berries endpoint](https://pokeapi.co/docs/v2#berries-section), and performs statistical calculations with the **growth_time** property. As the Poke API documentation states, the **growth time** is:
 > Time it takes the tree to grow one stage, in hours. Berry trees go through four of these growth stages before they can be picked.
 
