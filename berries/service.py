@@ -6,6 +6,9 @@ import requests
 class BerriesService:
     
     __base_url = "https://pokeapi.co/api/v2/berry"
+    def __init__(self):
+        self.__base_url = "https://pokeapi.co/api/v2/berry"
+        self.__session = requests.Session()
 
     @staticmethod
     def __get_growth_time_median(growth_times: List[int]) -> float:
@@ -24,11 +27,11 @@ class BerriesService:
         return Counter(growth_times)
 
     def __get_all_berries(self) -> List[Dict[str, str]]:
-        response = requests.get(self.__base_url).json()
+        response = self.__session.get(self.__base_url).json()
         berries: List[Dict[str, str]] = response.get('results')
 
         while next_request:= response.get('next'):
-            response = requests.get(next_request).json()
+            response = self.__session.get(next_request).json()
             berries.extend(response.get('results'))
         
         return berries
@@ -37,7 +40,7 @@ class BerriesService:
         berries_names = []
         growth_times = []
         for berry in self.__get_all_berries():
-            berry_data: Dict[str, Any] = requests.get(berry.get('url')).json()
+            berry_data: Dict[str, Any] = self.__session.get(berry.get('url')).json()
             berries_names.append(berry_data.get('name'))
             growth_times.append(berry_data.get('growth_time'))
 
