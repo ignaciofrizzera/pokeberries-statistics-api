@@ -1,7 +1,6 @@
 from collections import Counter
 from typing import List, Dict, Any
 import statistics
-import math
 import requests
 
 class BerriesService:
@@ -24,37 +23,29 @@ class BerriesService:
     def __get_growth_time_frequency(growth_times: List[int]) -> Counter:
         return Counter(growth_times)
 
-    def get_statistics(self) -> Dict[str, Any]:
+    def __get_all_berries(self) -> List[Dict[str, str]]:
         response = requests.get(self.__base_url).json()
         berries: List[Dict[str, str]] = response.get('results')
 
         while next_request:= response.get('next'):
             response = requests.get(next_request).json()
             berries.extend(response.get('results'))
-
+        
+        return berries
+    
+    def get_statistics(self) -> Dict[str, Any]:
         berries_names = []
-        min_growth_time = math.inf
-        max_growth_time = -1
         growth_times = []
-        # 64 berries -> 64 requests -> ~17s probably can be optimized
-        for berry in berries:
+        for berry in self.__get_all_berries():
             berry_data: Dict[str, Any] = requests.get(berry.get('url')).json()
-            # name
             berries_names.append(berry_data.get('name'))
-            # growth_time
-            growth_time = berry_data.get('growth_time')
-            growth_times.append(growth_time)
-            # min/max growth_time
-            if growth_time > max_growth_time:
-                max_growth_time = growth_time
-            if growth_time < min_growth_time:
-                min_growth_time = growth_time
+            growth_times.append(berry_data.get('growth_time'))
 
         return {
             "berries_names": berries_names,
-            "min_growth_time": min_growth_time,
+            "min_growth_time": min(growth_times),
             "median_growth_time": self.__get_growth_time_median(growth_times),
-            "max_growth_time": max_growth_time,
+            "max_growth_time": max(growth_times),
             "variance_growth_time": self.__get_growth_time_variance(growth_times),
             "mean_growth_time": self.__get_growth_time_mean(growth_times),
             "frequency_growth_time": self.__get_growth_time_frequency(growth_times)
