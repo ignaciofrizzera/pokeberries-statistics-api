@@ -35,7 +35,9 @@ class TestsBerries(SimpleTestCase):
     def test_min_max_growth_time(self):
         self.assertLessEqual(self.data["min_growth_time"], self.data["max_growth_time"])
     
-    def test_all_statistics_positive(self):
+    def test_all_positive(self):
+        self.assertGreaterEqual(self.data["min_growth_time"], 0)
+        self.assertGreaterEqual(self.data["max_growth_time"], 0)
         self.assertGreater(self.data["median_growth_time"], 0)
         self.assertGreater(self.data["variance_growth_time"], 0)
         self.assertGreater(self.data["mean_growth_time"], 0)
@@ -49,3 +51,11 @@ class TestsBerries(SimpleTestCase):
         berries_names = self.data["berries_names"]
         unique_names = set(berries_names)
         self.assertEqual(len(unique_names), len(berries_names))
+    
+    def test_one_berry_found(self):
+        if len(self.data["berries_names"]) == 1:
+            self.assertEqual(self.data["min_growth_time"], self.data["max_growth_time"])
+            self.assertEqual(self.data["max_growth_time"], self.data["frequency_growth_time"])
+            self.assertEqual(self.data["max_growth_time"], int(self.data["mean_growth_time"]))
+            self.assertEqual(self.data["max_growth_time"], int(self.data["median_growth_time"]))
+            self.assertEqual(self.data["variance_growth_time"], 0.0)
