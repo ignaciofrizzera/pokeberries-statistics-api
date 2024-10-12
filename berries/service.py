@@ -1,4 +1,3 @@
-from collections import Counter
 from typing import List, Dict, Any
 import statistics
 import requests
@@ -23,8 +22,8 @@ class BerriesService:
         return round(float(statistics.mean(growth_times)), 2)
     
     @staticmethod
-    def __get_growth_time_frequency(growth_times: List[int]) -> Counter:
-        return Counter(growth_times)
+    def __get_growth_time_frequency(growth_times: List[int]) -> int:
+        return statistics.mode(growth_times)
 
     def __get_all_berries(self) -> List[Dict[str, str]]:
         response = self.__session.get(self.__base_url).json()
