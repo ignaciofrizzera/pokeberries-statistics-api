@@ -52,10 +52,18 @@ class TestsBerries(SimpleTestCase):
         unique_names = set(berries_names)
         self.assertEqual(len(unique_names), len(berries_names))
     
-    def test_one_berry_found(self):
-        if len(self.data["berries_names"]) == 1:
+    def test_all_equal_growth_times(self):
+        if self.data["min_growth_time"] == self.data["max_growth_time"] or len(self.data["berries_names"]) == 1:
             self.assertEqual(self.data["min_growth_time"], self.data["max_growth_time"])
             self.assertEqual(self.data["max_growth_time"], self.data["frequency_growth_time"])
             self.assertEqual(self.data["max_growth_time"], int(self.data["mean_growth_time"]))
             self.assertEqual(self.data["max_growth_time"], int(self.data["median_growth_time"]))
             self.assertEqual(self.data["variance_growth_time"], 0.0)
+
+    def test_mean_median_variance_rounding(self):
+        rounded_mean = round(self.data["mean_growth_time"], 2)
+        self.assertAlmostEqual(self.data["mean_growth_time"], rounded_mean, places=2)
+        rounded_median = round(self.data["median_growth_time"], 2)
+        self.assertAlmostEqual(self.data["median_growth_time"], rounded_median, places=2)
+        rounded_variance = round(self.data["variance_growth_time"], 2)
+        self.assertAlmostEqual(self.data["variance_growth_time"], rounded_variance, places=2)
