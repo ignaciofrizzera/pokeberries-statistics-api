@@ -15,6 +15,8 @@ class BerriesService:
 
     @staticmethod
     def __get_growth_time_variance(growth_times: List[int]) -> float:
+        if len(growth_times) == 1:
+            return 0.0
         return round(float(statistics.variance(growth_times)), 2)
 
     @staticmethod
