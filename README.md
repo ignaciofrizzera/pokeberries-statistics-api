@@ -16,19 +16,14 @@ The response looks like this:
         "cheri",
         "chesto",
         "pecha",
-        ...
+        "..."
     ],
     "min_growth_time": 2,
     "median_growth_time": 15.0,
     "max_growth_time": 24,
     "variance_growth_time": 62.47,
     "mean_growth_time": 12.86,
-    "frequency_growth_time": {
-        "3": 5,
-        "4": 3,
-        "12": 1,
-        ...
-    }
+    "frequency_growth_time": 18
 }
 ```
 
@@ -38,6 +33,6 @@ The response looks like this:
 * **max_growth_time** is an integer with the maxium growth time among all retrieved pokeberries.
 * **variance_growth_time** is a float with the variance of the growth time for all retrieved pokeberries.
 * **mean_growth_time** is a float with the mean of the growth time for all retrieved pokeberries.
-* **frequency_growth_time** is a dict containing the number of times each growh time appears among all the pokeberries.
+* **frequency_growth_time** is an integer representing the most frequent growth time among all retrieved pokeberries.
 
 # 
