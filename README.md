@@ -2,7 +2,7 @@
 
 Simple API developed in [Django](https://www.djangoproject.com/) that retrieves data related to pokeberries and performs statistical calculations on them, using the [Poke API](https://pokeapi.co/docs/v2#berries).
 
-# Setup
+## Setup
 In order to setup the project follow this steps:
 
 1) Install Python
@@ -33,11 +33,11 @@ In order to setup the project follow this steps:
 
 8) Finally, the app should be running on http://localhost:8000/
 
-# API Endpoints
+## API Endpoints
 
 The API consists of one simple endpoint **/allBerryStats**.
 
-## allBerryStats
+### allBerryStats
 This endpoint fetches data from the Poke API, specifically the [berries endpoint](https://pokeapi.co/docs/v2#berries-section), and performs statistical calculations with the **growth_time** property. As the Poke API documentation states, the **growth time** is:
 > Time it takes the tree to grow one stage, in hours. Berry trees go through four of these growth stages before they can be picked.
 
@@ -68,4 +68,11 @@ The response looks like this:
 * **mean_growth_time** is a float with the mean of the growth time for all retrieved pokeberries.
 * **frequency_growth_time** is an integer representing the most frequent growth time among all retrieved pokeberries.
 
-# 
+## Testing
+
+The test cases for this project are located in the `tests` directory. You can view the test file [here](./tests/tests_berries.py).
+
+To run them use the following command:
+```bash
+python manage.py test
+```
