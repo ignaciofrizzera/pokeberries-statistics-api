@@ -21,5 +21,6 @@ from berries import views
 
 urlpatterns = [
     path("allBerryStats/", views.all_berry_stats, name="allBerryStats"),
+    path("", views.berries_stats_visualization),
     path("admin/", admin.site.urls),
 ]
