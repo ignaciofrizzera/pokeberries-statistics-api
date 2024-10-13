@@ -1,23 +1,77 @@
-<!-- 
-    Data structure
-    {
-        "berries_names": [
-            "cheri",
-            "chesto",
-            "pecha",
-            "..."
-        ],
-        "min_growth_time": 2,
-        "median_growth_time": 15.0,
-        "max_growth_time": 24,
-        "variance_growth_time": 62.47,
-        "mean_growth_time": 12.86,
-        "frequency_growth_time": 18
-    } 
--->
-<h1>
-    Hello World!
-    <p>
-        Min Growth time: {{min_growth_time}}
-    </p>
-</h1>
+<html lang="en">
+    <head>
+        <title>Berries Stats Visualization</title>
+        <style>
+            body {
+                padding-top: 15px;
+                justify-content: center;
+                align-items: center;
+                font-family: Arial, sans-serif;
+                text-align: center;
+                font-size: 16px;
+            }
+            table {
+                margin: auto;
+                border-collapse: collapse;
+                width: auto;
+            }
+            table, th, td {
+                border: 1px solid black;
+            }
+            td {
+                padding: 8px;
+                text-align: center;
+            }
+        </style>
+    </head>
+    <body>
+        <div>
+            <h1>Berries Stats Visualization</h1>
+            <p>
+                This data was retrieved from the <a href="https://pokeapi.co/" target="_blank" rel="noopener noreferrer">PokeAPI</a> 
+            </p>
+            <p>
+                <strong>Total berries in sample:</strong> {{ berries_names|length }}
+            </p>
+            <p>
+                <strong>Min Growth time:</strong> {{ min_growth_time }}
+            </p>
+            <p>
+                <strong>Median Growth time:</strong> {{ median_growth_time }}
+            </p>
+            <p>
+                <strong>Max Growth time:</strong> {{ max_growth_time }}
+            </p>
+            <p>
+                <strong>Variance of Growth time:</strong> {{ variance_growth_time }}
+            </p>
+            <p>
+                <strong>Mean Growth time:</strong> {{ mean_growth_time }}
+            </p>
+            <p>
+                <strong>Most Frequent Growth time:</strong> {{ frequency_growth_time }}
+            </p>
+            <h3>Berries Names</h3>
+            <table>
+                {% for berry in berries_names %}
+                  {% if forloop.counter0|divisibleby:8 %}
+                    <tr>
+                  {% endif %}
+                  <td>{{ berry }}</td>
+                  {% if forloop.counter|divisibleby:8 %}
+                    </tr>
+                  {% endif %}
+                {% endfor %}
+            </table>
+            <table>
+                <tr>
+                    <img src="data:image/png;base64,{{ image }}" alt="Bar Plot">
+                </tr>
+                <!-- Leave as placeholder to add one more graph later -->
+                <tr>
+                    <img src="data:image/png;base64,{{ image }}" alt="Bar Plot">
+                </tr>
+            </table>
+        </div>
+    </body>
+</html>

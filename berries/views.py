@@ -19,8 +19,8 @@ def all_berry_stats(request: HttpRequest) -> JsonResponse:
 @csrf_exempt
 @require_http_methods(["GET"])
 def berries_stats_visualization(request: HttpRequest) -> Union[HttpResponse, JsonResponse]:
-    # try:
-    berry_stats = BerriesService().get_statistics()
-    return render(request, template_name='berries_stats_visualization.html', context=berry_stats)
-    # except Exception:
-        # return JsonResponse({'error': 'There was an error generating the visualization for the berries data.'}, status=500)
+    try:
+        berries_data = BerriesService().get_data_for_visualization()
+        return render(request, template_name='berries_stats_visualization.html', context=berries_data)
+    except Exception:
+        return JsonResponse({'error': 'There was an error generating the visualization for the berries data.'}, status=500)

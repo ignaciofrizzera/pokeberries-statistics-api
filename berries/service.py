@@ -1,10 +1,15 @@
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Union, Tuple
+from collections import Counter
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+import io
+import base64
 import statistics
 import requests
 
 class BerriesService:
     
-    __base_url = "https://pokeapi.co/api/v2/berry"
     def __init__(self):
         self.__base_url = "https://pokeapi.co/api/v2/berry"
         self.__session = requests.Session()
@@ -37,7 +42,7 @@ class BerriesService:
         
         return berries
     
-    def get_statistics(self) -> Dict[str, Any]:
+    def get_statistics(self, for_visualization: bool = False) -> Union[Dict[str, Any], Tuple[Dict[str, Any], List[int]]]:
         berries_names = []
         growth_times = []
         for berry in self.__get_all_berries():
@@ -45,7 +50,7 @@ class BerriesService:
             berries_names.append(berry_data.get('name'))
             growth_times.append(berry_data.get('growth_time'))
 
-        return {
+        statistics_data = {
             "berries_names": berries_names,
             "min_growth_time": min(growth_times),
             "median_growth_time": self.__get_growth_time_median(growth_times),
@@ -54,3 +59,37 @@ class BerriesService:
             "mean_growth_time": self.__get_growth_time_mean(growth_times),
             "frequency_growth_time": self.__get_growth_time_frequency(growth_times)
         }
+
+        if not for_visualization:
+            return statistics_data
+        
+        return statistics_data, growth_times
+    
+    @staticmethod
+    def __generate_bar_chart_image(labels: List[Any], values: List[Any], title: str, x_label: str, y_label: str) -> str:
+        _, ax = plt.subplots()
+        ax.set_title(title)
+        ax.set_xlabel(x_label)
+        ax.set_ylabel(y_label)
+        ax.set_xticks(labels)
+        ax.set_yticks(range(0, max(values) + 1))
+        ax.bar(labels, values)
+
+        buffer = io.BytesIO()
+        plt.savefig(buffer, format='png')
+        buffer.seek(0)
+        image_png = buffer.getvalue()
+        buffer.close()
+
+        return base64.b64encode(image_png).decode('utf-8')
+    
+    def get_data_for_visualization(self) -> Dict[str, Any]:
+        statistics_data, growth_times = self.get_statistics(for_visualization=True)
+        growth_times_counter = Counter(growth_times)
+        labels, values= zip(*growth_times_counter.items())
+
+        bar_chart_image = self.__generate_bar_chart_image(
+            labels, values, title="Growth Times among the Berries", x_label="Growth Time", y_label="Frequency")
+        
+        statistics_data["image"] = bar_chart_image
+        return statistics_data
