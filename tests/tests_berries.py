@@ -1,5 +1,10 @@
 from berries.service import BerriesService
-from django.test import SimpleTestCase
+from django.test import SimpleTestCase, Client
+from django.urls import reverse
+from PIL.ImageFile import ImageFile
+from PIL import Image
+import base64
+import io
 
 
 class TestsBerries(SimpleTestCase):
@@ -7,6 +12,7 @@ class TestsBerries(SimpleTestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.service = BerriesService()
         cls.data = BerriesService().get_statistics()
 
     def test_has_data(self):
@@ -67,3 +73,54 @@ class TestsBerries(SimpleTestCase):
         self.assertAlmostEqual(self.data["median_growth_time"], rounded_median, places=2)
         rounded_variance = round(self.data["variance_growth_time"], 2)
         self.assertAlmostEqual(self.data["variance_growth_time"], rounded_variance, places=2)
+
+    def test_get_statistics_returns(self):
+        no_visualization_data = self.service.get_statistics(for_visualization=False)
+        self.assertIsInstance(no_visualization_data, dict)
+        visualization_data = self.service.get_statistics(for_visualization=True)
+        self.assertIsInstance(visualization_data, tuple)
+        self.assertEqual(len(visualization_data), 2)
+        statistics_data, growth_times = visualization_data[0], visualization_data[1]
+        self.assertIsInstance(statistics_data, dict)
+        self.assertIsInstance(growth_times, list)
+    
+    @staticmethod
+    def __decode_image(encoded_image: str) -> ImageFile:
+        decoded_bar_chart_image = base64.b64decode(encoded_image)
+        return Image.open(io.BytesIO(decoded_bar_chart_image))
+
+    def __test_image(self, encoded_image: str):
+        image = self.__decode_image(encoded_image)
+        self.assertIsNotNone(image)
+        self.assertEqual(image.format, 'PNG')
+    
+    def test_get_data_for_visualization_method(self):
+        visualization_data = self.service.get_data_for_visualization()
+        self.assertIn("bar_chart", visualization_data)
+        self.assertIn("bins_histogram", visualization_data)
+        self.assertIsInstance(visualization_data["bar_chart"], str)
+        self.assertIsInstance(visualization_data["bins_histogram"], str)
+        self.__test_image(visualization_data["bar_chart"])
+        self.__test_image(visualization_data["bins_histogram"])
+    
+    def test_all_berry_stats_endpoint(self):
+        client = Client()
+        url = reverse("all_berry_stats")
+        response = client.post(url)
+        self.assertEqual(response.status_code, 405)
+        response = client.get(url)
+        self.assertEqual(response.status_code, 200)
+    
+    def test_berries_stats_visualization_endpoint(self):
+        client = Client()
+        url = reverse("berries_stats_visualization")
+        response = client.post(url)
+        self.assertEqual(response.status_code, 405)
+        response = client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "berries_stats_visualization.html")
+        expected_keys = [
+            "berries_names", "min_growth_time", "median_growth_time", "max_growth_time",
+            "variance_growth_time", "mean_growth_time", "frequency_growth_time", "bar_chart", "bins_histogram"]
+        for expected_key in expected_keys:
+            self.assertIn(expected_key, response.context)
