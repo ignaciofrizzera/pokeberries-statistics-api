@@ -79,6 +79,18 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "pokeberries_api_project.wsgi.application"
 
+# Simple cache setup
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'unique-snowflake',
+        'TIMEOUT': 300,
+        'OPTIONS': {
+            'MAX_ENTRIES': 150
+        }
+    }
+}
+
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
