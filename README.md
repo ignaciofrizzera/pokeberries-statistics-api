@@ -2,6 +2,9 @@
 
 Simple API developed in [Django](https://www.djangoproject.com/) that retrieves data related to pokeberries and performs statistical calculations on them, using the [Poke API](https://pokeapi.co/docs/v2#berries).
 
+## Deployment
+This app is deployed using [Python Anywhere](https://pythonanywhere.com/). You can see it [here](https://ignaciofrizzera.pythonanywhere.com/)
+
 ## Setup
 
 ### Option 1: Setup with Docker
