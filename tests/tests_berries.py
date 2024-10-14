@@ -1,5 +1,6 @@
 from berries.service import BerriesService
-from django.test import SimpleTestCase
+from django.test import SimpleTestCase, Client
+from django.urls import reverse
 from PIL.ImageFile import ImageFile
 from PIL import Image
 import base64
@@ -101,3 +102,25 @@ class TestsBerries(SimpleTestCase):
         self.assertIsInstance(visualization_data["bins_histogram"], str)
         self.__test_image(visualization_data["bar_chart"])
         self.__test_image(visualization_data["bins_histogram"])
+    
+    def test_all_berry_stats_endpoint(self):
+        client = Client()
+        url = reverse("all_berry_stats")
+        response = client.post(url)
+        self.assertEqual(response.status_code, 405)
+        response = client.get(url)
+        self.assertEqual(response.status_code, 200)
+    
+    def test_berries_stats_visualization_endpoint(self):
+        client = Client()
+        url = reverse("berries_stats_visualization")
+        response = client.post(url)
+        self.assertEqual(response.status_code, 405)
+        response = client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "berries_stats_visualization.html")
+        expected_keys = [
+            "berries_names", "min_growth_time", "median_growth_time", "max_growth_time",
+            "variance_growth_time", "mean_growth_time", "frequency_growth_time", "bar_chart", "bins_histogram"]
+        for expected_key in expected_keys:
+            self.assertIn(expected_key, response.context)
