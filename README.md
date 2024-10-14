@@ -69,8 +69,8 @@ Simple API developed in [Django](https://www.djangoproject.com/) that retrieves 
 
 The API consists of one simple endpoint **/allBerryStats**.
 
-### allBerryStats
-This endpoint fetches data from the Poke API, specifically the [berries endpoint](https://pokeapi.co/docs/v2#berries-section), and performs statistical calculations with the **growth_time** property. As the Poke API documentation states, the **growth time** is:
+### allBerryStats [GET]
+This endpoint only allows the **GET** method, and fetches data from the Poke API, specifically the [berries endpoint](https://pokeapi.co/docs/v2#berries-section), and performs statistical calculations with the **growth_time** property. As the Poke API documentation states, the **growth time** is:
 > Time it takes the tree to grow one stage, in hours. Berry trees go through four of these growth stages before they can be picked.
 
 The response looks like this:
@@ -99,6 +99,20 @@ The response looks like this:
 * **variance_growth_time** is a float with the variance of the growth time for all retrieved pokeberries.
 * **mean_growth_time** is a float with the mean of the growth time for all retrieved pokeberries.
 * **frequency_growth_time** is an integer representing the most frequent growth time among all retrieved pokeberries.
+
+In case of any error or failure, you'll get an error message in the response that looks like this:
+
+```json
+{
+    "error": 'There was an error processing the berry statistics.'
+}
+```
+
+## Visualization
+If you wish to visualize the data of the berries, you can go to the main page of the application (e.g., by navigating to **localhost:8000** in your browser) to see the berry statistics visualized. The page should look like this:
+
+![Visualization](static/berries_visualization.png)
+
 
 ## Testing
 
