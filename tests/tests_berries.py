@@ -1,6 +1,8 @@
 from berries.service import BerriesService
+from unittest.mock import patch
 from django.test import SimpleTestCase, Client
 from django.urls import reverse
+from django.http import JsonResponse, HttpResponse
 from PIL.ImageFile import ImageFile
 from PIL import Image
 import base64
@@ -108,7 +110,14 @@ class TestsBerries(SimpleTestCase):
         url = reverse("all_berry_stats")
         response = client.post(url)
         self.assertEqual(response.status_code, 405)
+        with patch("berries.service.BerriesService.get_statistics") as mock_get_statistics:
+            mock_get_statistics.side_effect = Exception()
+            response = client.get(url)
+            self.assertEqual(response.status_code, 500)
+            self.assertIsInstance(response, JsonResponse)
+            self.assertEqual({"error": "There was an error processing the berry statistics."}, response.json())
         response = client.get(url)
+        self.assertIsInstance(response, JsonResponse)
         self.assertEqual(response.status_code, 200)
     
     def test_berries_stats_visualization_endpoint(self):
@@ -116,8 +125,15 @@ class TestsBerries(SimpleTestCase):
         url = reverse("berries_stats_visualization")
         response = client.post(url)
         self.assertEqual(response.status_code, 405)
+        with patch("berries.service.BerriesService.get_data_for_visualization") as mock_get_data_for_visualization:
+            mock_get_data_for_visualization.side_effect = Exception()
+            response = client.get(url)
+            self.assertEqual(response.status_code, 500)
+            self.assertIsInstance(response, JsonResponse)
+            self.assertEqual({'error': 'There was an error generating the visualization for the berries data.'}, response.json())
         response = client.get(url)
         self.assertEqual(response.status_code, 200)
+        self.assertIsInstance(response, HttpResponse)
         self.assertTemplateUsed(response, "berries_stats_visualization.html")
         expected_keys = [
             "berries_names", "min_growth_time", "median_growth_time", "max_growth_time",
