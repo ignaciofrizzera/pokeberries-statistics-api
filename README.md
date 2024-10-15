@@ -36,7 +36,7 @@ This app is deployed using [Python Anywhere](https://pythonanywhere.com/). You c
 7) Finally, the app should be running on http://localhost:8000/
 
 ### Option 2: Setup without Docker
-1) Install [Python](https://www.python.org/downloads/) if you don't have it installed
+1) Install [Python](https://www.python.org/downloads/) if you don't have it installed. Recommended version for this project is >= 3.10
 
 2) Clone the repository
     ```
